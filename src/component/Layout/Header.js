@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useContext } from "react";
 import MealImage from "../../asset/meals.jpg";
 import classes from "./Header.module.css";
 import HeaderCartButton from "./HeaderCartButton";

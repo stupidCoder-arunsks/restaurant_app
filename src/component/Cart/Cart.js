@@ -1,11 +1,37 @@
+import CartContext from "../../Store/CartContext";
 import Modal from "../UI/Modal";
 import classes from "./Cart.module.css";
+import React, { useContext } from "react";
 
 const Cart = (props) => {
+  const cartContext = useContext(CartContext);
+
+  const combinedItems = {};
+  cartContext.items.forEach((item) => {
+    if (!combinedItems[item.id]) {
+      combinedItems[item.id] = item;
+    } else {
+      combinedItems[item.id].quantity =
+        +combinedItems[item.id].quantity + +item.quantity;
+    }
+  });
+
+  const cartItem = Object.values(combinedItems);
+  console.log("cartItem ", cartItem);
+
+  let totalPrice = 0;
+  cartItem.forEach((item) => {
+    totalPrice = totalPrice + item.quantity * item.price;
+  });
+
+  // cartContext.cartUpdate(cartItem, totalPrice);
+
   const cartItems = (
     <ul className={classes["cart-items"]}>
-      {[{ id: "c1", name: "Sushi", amount: 2, price: 12.99 }].map((item) => (
-        <li>{item.name}</li>
+      {cartItem.map((item) => (
+        <li>
+          {`name:${item.name} price:${item.price} quantity:${item.quantity}`}
+        </li>
       ))}
     </ul>
   );
@@ -15,7 +41,7 @@ const Cart = (props) => {
       {cartItems}
       <div className={classes.total}>
         <span>Total Amount</span>
-        <span>35.34</span>
+        <span>${totalPrice.toFixed(2)}</span>
       </div>
       <div className={classes.actions}>
         <button className={classes["button--alt"]} onClick={props.onHide}>
